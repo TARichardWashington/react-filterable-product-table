@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 
 export default function App() {
@@ -39,16 +38,30 @@ function SearchBar() {
 }
 
 function ProductTable() {
+  const rows = [];
+  let currentCategory;
+
+  PRODUCTS.forEach((product) => {
+    if (product.category !== currentCategory) {
+      rows.push(<ProductCategoryRow name={product.category} key={product.category} />);
+    }
+
+    rows.push(<ProductRow product={product} key={product.name} />);
+
+    currentCategory = product.category;
+  });
+
   return (
     <table>
-      <tr>
-        <th>Name</th>
-        <th>Price</th>
-      </tr>
-      <ProductCategoryRow name="fruit" />
-      <ProductRow name="banana" price="2.20" />
-      <ProductRow name="apple" price="1.35" />
-      <ProductRow name="grape" price="9.73" />
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows}
+      </tbody>
     </table>
   );
 }
@@ -56,12 +69,15 @@ function ProductTable() {
 function ProductCategoryRow({ name }) {
   return (
     <tr>
-      <td colspan="2">{name}</td></tr>
+      <td colSpan="2">{name}</td>
+    </tr>
   );
 }
 
-function ProductRow({ name, price }) {
+function ProductRow({ product }) {
+  const name = product.stocked ? product.name : <span style={{ color: 'red' }}>{product.name}</span>
+
   return (
-    <tr><td>{name}</td><td>£{price}</td></tr>
+    <tr><td>{name}</td><td>{product.price}</td></tr>
   );
 }

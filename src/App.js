@@ -28,7 +28,9 @@ function FilterableProductsTable({ products }) {
       <h2>Filterable Products Table</h2>
       <SearchBar
         filterText={filterText}
-        inSockOnly={inStockOnly}
+        inStockOnly={inStockOnly}
+        onFilterTextChange={setFilterText}
+        onInStockOnlyChange={setInStockOnly}
       />
       <ProductTable
         products={products}
@@ -38,11 +40,16 @@ function FilterableProductsTable({ products }) {
   );
 }
 
-function SearchBar() {
+function SearchBar({
+  filterText,
+  inStockOnly,
+  onFilterTextChange,
+  onInStockOnlyChange
+}) {
   return (
     <>
-      <input type="text" /><br />
-      <p> <input type="checkbox" />
+      <input type="text" value={filterText} onChange={(e) => onFilterTextChange(e.target.value)} /><br />
+      <p> <input type="checkbox" checked={inStockOnly} onChange={(e) => onInStockOnlyChange(e.target.checked)} />
         Only show products in stock</p>
     </>
   );

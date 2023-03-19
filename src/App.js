@@ -1,9 +1,10 @@
 import './App.css';
+import { useState } from 'react';
 
 export default function App() {
   return (
     <>
-      <FilterableProductsTable />
+      <FilterableProductsTable products={PRODUCTS} />
     </>
   );
 }
@@ -17,12 +18,22 @@ const PRODUCTS = [
   { category: "Vegetables", price: "$1", stocked: true, name: "Peas" }
 ];
 
-function FilterableProductsTable() {
+function FilterableProductsTable({ products }) {
+
+  const [filterText, setFilterText] = useState('fruit');
+  const [inStockOnly, setInStockOnly] = useState(true);
+
   return (
     <div>
       <h2>Filterable Products Table</h2>
-      <SearchBar />
-      <ProductTable />
+      <SearchBar
+        filterText={filterText}
+        inSockOnly={inStockOnly}
+      />
+      <ProductTable
+        products={products}
+        filterText={filterText}
+        inStockOnly={inStockOnly} />
     </div>
   );
 }
@@ -37,11 +48,20 @@ function SearchBar() {
   );
 }
 
-function ProductTable() {
+function ProductTable({ products, filterText, inStockOnly }) {
   const rows = [];
   let currentCategory;
 
-  PRODUCTS.forEach((product) => {
+  products.forEach((product) => {
+
+    if (product.name.toLowerCase().indexOf(filterText.toLowerCase()) === -1) {
+      return;
+    }
+
+    if (!product.stocked && inStockOnly) {
+      return;
+    }
+
     if (product.category !== currentCategory) {
       rows.push(<ProductCategoryRow name={product.category} key={product.category} />);
     }
